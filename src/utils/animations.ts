@@ -54,3 +54,42 @@ export const scaleUp = {
   hidden: { opacity: 0, scale: 0.95 },
   visible: { opacity: 1, scale: 1, transition: { duration: 0.4 } }
 };
+
+/**
+ * Additional animation variants
+ */
+export const slideInLeft = {
+  hidden: { opacity: 0, x: -20 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
+};
+
+export const slideInRight = {
+  hidden: { opacity: 0, x: 20 },
+  visible: { opacity: 1, x: 0, transition: { duration: 0.5 } }
+};
+
+export const popIn = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { 
+    opacity: 1, 
+    scale: 1, 
+    transition: { 
+      type: "spring",
+      damping: 12,
+      stiffness: 200
+    } 
+  }
+};
+
+/**
+ * Staggered children animation helper
+ * @param staggerTime - Time between each child animation in seconds
+ * @returns Framer Motion staggered children configuration
+ */
+export const staggerChildren = (staggerTime: number = 0.1) => ({
+  visible: {
+    transition: {
+      staggerChildren: staggerTime
+    }
+  }
+});

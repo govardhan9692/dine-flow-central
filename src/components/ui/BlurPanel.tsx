@@ -7,6 +7,8 @@ interface BlurPanelProps extends React.HTMLAttributes<HTMLDivElement> {
   intensity?: 'light' | 'medium' | 'heavy';
   className?: string;
   borderVisible?: boolean;
+  colorVariant?: 'white' | 'dark' | 'primary';
+  glowEffect?: boolean;
 }
 
 /**
@@ -17,20 +19,38 @@ export function BlurPanel({
   intensity = 'medium', 
   className,
   borderVisible = true,
+  colorVariant = 'white',
+  glowEffect = false,
   ...props 
 }: BlurPanelProps) {
   const blurIntensity = {
-    light: 'backdrop-blur-sm bg-white/60',
-    medium: 'backdrop-blur-md bg-white/70',
-    heavy: 'backdrop-blur-xl bg-white/80',
+    light: 'backdrop-blur-sm',
+    medium: 'backdrop-blur-md',
+    heavy: 'backdrop-blur-xl',
   };
+  
+  const colorVariants = {
+    white: 'bg-white/60 dark:bg-white/10',
+    dark: 'bg-black/20 dark:bg-black/40',
+    primary: 'bg-primary/20 dark:bg-primary/10',
+  };
+  
+  const borderStyles = borderVisible 
+    ? 'border border-white/20 dark:border-white/10' 
+    : '';
+  
+  const glowStyles = glowEffect 
+    ? 'shadow-[0_8px_32px_rgba(0,0,0,0.1)] dark:shadow-[0_8px_32px_rgba(255,255,255,0.05)]' 
+    : 'shadow-glass';
 
   return (
     <div
       className={cn(
-        'rounded-2xl shadow-glass',
+        'rounded-2xl',
         blurIntensity[intensity],
-        borderVisible && 'border border-white/20',
+        colorVariants[colorVariant],
+        borderStyles,
+        glowStyles,
         className
       )}
       {...props}
