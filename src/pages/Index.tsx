@@ -8,7 +8,7 @@ import CTASection from '@/components/home/CTASection';
 
 const Index = () => {
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="flex flex-col">
       <HeroSection />
       <FeaturesSection />
       <RestaurantsSection />

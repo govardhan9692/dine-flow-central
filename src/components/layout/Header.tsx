@@ -1,17 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { AnimatePresence, motion } from 'framer-motion';
-import { ShoppingCart, User, LogIn, Menu, X, Home, Book, LogOut } from 'lucide-react';
+import { ShoppingCart, User, LogIn, Menu, X, Home, Info } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { BlurPanel } from '@/components/ui/BlurPanel';
 import { useCart } from '@/context/CartContext';
-import { useAuth } from '@/context/AuthContext';
 
 export function Header() {
   const location = useLocation();
   const { cartItems } = useCart();
-  const { user, signOut } = useAuth();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   
@@ -20,20 +16,9 @@ export function Header() {
   // Navigation links
   const navLinks = [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Menu', path: '/menu', icon: Book },
+    { name: 'Menu', path: '/menu', icon: Home },
+    { name: 'About', path: '/about', icon: Info },
   ];
-  
-  // User menu links
-  const userLinks = user 
-    ? [
-        { name: 'Profile', path: '/profile', icon: User },
-        { name: 'Dashboard', path: '/dashboard', icon: User },
-        { name: 'Sign Out', action: signOut, icon: LogOut },
-      ]
-    : [
-        { name: 'Sign In', path: '/login', icon: LogIn },
-        { name: 'Register', path: '/register', icon: User },
-      ];
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,10 +36,11 @@ export function Header() {
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50">
-      <BlurPanel 
-        intensity={isScrolled ? 'heavy' : 'light'}
+      <div 
         className={`transition-all duration-300 px-4 sm:px-6 ${
-          isScrolled ? 'py-2 shadow-elevated' : 'py-4'
+          isScrolled 
+            ? 'py-2 bg-background/80 backdrop-blur-md shadow-md' 
+            : 'py-4 bg-transparent'
         }`}
       >
         <div className="max-w-7xl mx-auto flex items-center justify-between">
@@ -94,28 +80,13 @@ export function Header() {
               </Button>
             </Link>
 
-            {/* User menu */}
-            <div className="hidden md:block">
-              {user ? (
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm">{user.displayName || user.email}</span>
-                  <Button 
-                    variant="ghost" 
-                    size="icon"
-                    onClick={signOut}
-                  >
-                    <LogOut size={20} />
-                  </Button>
-                </div>
-              ) : (
-                <Link to="/login">
-                  <Button variant="outline" size="sm" className="flex items-center gap-1">
-                    <LogIn size={16} />
-                    Sign In
-                  </Button>
-                </Link>
-              )}
-            </div>
+            {/* Sign In button (desktop) */}
+            <Link to="/login" className="hidden md:block">
+              <Button variant="outline" size="sm" className="flex items-center gap-1">
+                <LogIn size={16} />
+                Sign In
+              </Button>
+            </Link>
 
             {/* Mobile menu button */}
             <Button 
@@ -128,66 +99,48 @@ export function Header() {
             </Button>
           </div>
         </div>
-      </BlurPanel>
+      </div>
 
       {/* Mobile menu */}
-      <AnimatePresence>
-        {mobileMenuOpen && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.2 }}
-            className="md:hidden"
-          >
-            <BlurPanel 
-              intensity="heavy" 
-              className="m-2 p-4 shadow-elevated"
-            >
-              <nav className="flex flex-col space-y-2">
-                {navLinks.map((link) => (
-                  <Link 
-                    key={link.path} 
-                    to={link.path}
-                    className={`px-4 py-3 rounded-xl flex items-center space-x-2 ${
-                      location.pathname === link.path 
-                        ? 'bg-primary text-primary-foreground' 
-                        : 'hover:bg-secondary'
-                    }`}
-                  >
-                    <link.icon size={18} />
-                    <span>{link.name}</span>
-                  </Link>
-                ))}
-                
-                <div className="border-t border-border my-2 pt-2">
-                  {userLinks.map((link, i) => 
-                    link.action ? (
-                      <button 
-                        key={i}
-                        onClick={link.action}
-                        className="w-full px-4 py-3 rounded-xl flex items-center space-x-2 text-left hover:bg-secondary"
-                      >
-                        <link.icon size={18} />
-                        <span>{link.name}</span>
-                      </button>
-                    ) : (
-                      <Link 
-                        key={i}
-                        to={link.path}
-                        className="px-4 py-3 rounded-xl flex items-center space-x-2 hover:bg-secondary"
-                      >
-                        <link.icon size={18} />
-                        <span>{link.name}</span>
-                      </Link>
-                    )
-                  )}
-                </div>
-              </nav>
-            </BlurPanel>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {mobileMenuOpen && (
+        <div className="md:hidden">
+          <div className="bg-background/95 backdrop-blur-sm shadow-lg p-4">
+            <nav className="flex flex-col space-y-2">
+              {navLinks.map((link) => (
+                <Link 
+                  key={link.path} 
+                  to={link.path}
+                  className={`px-4 py-3 rounded-xl flex items-center space-x-2 ${
+                    location.pathname === link.path 
+                      ? 'bg-primary text-primary-foreground' 
+                      : 'hover:bg-secondary'
+                  }`}
+                >
+                  <link.icon size={18} />
+                  <span>{link.name}</span>
+                </Link>
+              ))}
+              
+              <div className="border-t border-border my-2 pt-2">
+                <Link 
+                  to="/login"
+                  className="px-4 py-3 rounded-xl flex items-center space-x-2 hover:bg-secondary"
+                >
+                  <LogIn size={18} />
+                  <span>Sign In</span>
+                </Link>
+                <Link 
+                  to="/register"
+                  className="px-4 py-3 rounded-xl flex items-center space-x-2 hover:bg-secondary"
+                >
+                  <User size={18} />
+                  <span>Register</span>
+                </Link>
+              </div>
+            </nav>
+          </div>
+        </div>
+      )}
     </header>
   );
 }
