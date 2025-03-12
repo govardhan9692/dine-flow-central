@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { ShoppingCart, User, LogIn, Menu, X, Home, Info } from 'lucide-react';
+import { ShoppingCart, User, LogIn, Menu, X, Home, Info, Utensils } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useCart } from '@/context/CartContext';
 
@@ -16,7 +16,7 @@ export function Header() {
   // Navigation links
   const navLinks = [
     { name: 'Home', path: '/', icon: Home },
-    { name: 'Menu', path: '/menu', icon: Home },
+    { name: 'Menu', path: '/menu', icon: Utensils },
     { name: 'About', path: '/about', icon: Info },
   ];
 

@@ -3,11 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { ArrowLeft, Plus, Minus, ShoppingCart, Clock } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { BlurPanel } from '@/components/ui/BlurPanel';
 import { MenuItem } from '@/components/ui/ItemCard';
 import { useCart } from '@/context/CartContext';
+import { AnimatedCard } from '@/components/ui/AnimatedCard';
 
-// Mock menu items data (same as in MenuPage)
+// Mock menu items data (same as in Menu.tsx)
 const menuItems: MenuItem[] = [
   {
     id: 'item1',
@@ -56,7 +56,7 @@ const menuItems: MenuItem[] = [
   }
 ];
 
-// Mock related items (a few items from the same category or recommended)
+// Get related items (a few items from the same category or recommended)
 const getRelatedItems = (currentItemId: string, category: string): MenuItem[] => {
   return menuItems
     .filter(item => item.id !== currentItemId && (item.category === category || Math.random() > 0.5))
@@ -75,6 +75,8 @@ const ItemDetail = () => {
   useEffect(() => {
     // Simulate fetching item details
     setLoading(true);
+    setIsImageLoaded(false);
+    
     setTimeout(() => {
       const foundItem = menuItems.find(item => item.id === id) || null;
       setItem(foundItem);
@@ -84,7 +86,7 @@ const ItemDetail = () => {
       }
       
       setLoading(false);
-    }, 500);
+    }, 300);
   }, [id]);
   
   const handleQuantityChange = (delta: number) => {
@@ -189,7 +191,7 @@ const ItemDetail = () => {
             </p>
             
             {/* Nutritional info */}
-            <BlurPanel className="p-4 mb-8 animate-fade-in [animation-delay:400ms]">
+            <div className="bg-card/60 backdrop-blur-sm rounded-xl shadow-subtle p-4 mb-8 animate-fade-in [animation-delay:400ms]">
               <h3 className="font-medium mb-2">Nutritional Information</h3>
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 {[
@@ -204,7 +206,7 @@ const ItemDetail = () => {
                   </div>
                 ))}
               </div>
-            </BlurPanel>
+            </div>
             
             {/* Quantity and add to cart */}
             <div className="mt-auto animate-fade-in [animation-delay:500ms]">
@@ -257,7 +259,7 @@ const ItemDetail = () => {
                   className="block group animate-fade-in"
                   style={{ animationDelay: `${i * 100}ms` }}
                 >
-                  <BlurPanel className="overflow-hidden">
+                  <AnimatedCard className="overflow-hidden">
                     <div className="relative aspect-square overflow-hidden">
                       <img 
                         src={relatedItem.image} 
@@ -274,7 +276,7 @@ const ItemDetail = () => {
                         {relatedItem.description}
                       </p>
                     </div>
-                  </BlurPanel>
+                  </AnimatedCard>
                 </Link>
               ))}
             </div>
